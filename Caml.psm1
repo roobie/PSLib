@@ -19,6 +19,7 @@ Import-Module $PSScriptRoot/DebugUtilities.psm1
 
 function Test-ValidateCaml {
     param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         $camlText
     )
     $x = [XML]$camlText
