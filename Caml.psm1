@@ -185,6 +185,16 @@ function Format-CamlIsNull {
 
 Set-Alias -Name isNull -Value Format-CamlIsNull
 
+function Format-CamlContains {
+    param(
+        [Parameter(Mandatory = $true)]
+        $Block
+    )
+    "<Contains>$(& $Block)</Contains>"
+}
+
+Set-Alias -Name contains -Value Format-CamlContains
+
 function Format-CamlBoolean {
     param(
         [Parameter(Mandatory = $true)]
@@ -202,9 +212,14 @@ function Format-CamlFieldRef {
         [Parameter(Mandatory = $true)]
         $FieldInternalName,
         [Parameter(Mandatory = $false)]
+        $LookupId = $null,
+        [Parameter(Mandatory = $false)]
         $Ascending = $null
     )
     $attrs = ''
+    if ($null -ne $LookupId) {
+        $attrs += " LookupId='$(Format-CamlBoolean $LookupId)'"
+    }
     if ($null -ne $Ascending) {
         $attrs += " Ascending='$(Format-CamlBoolean $Ascending)'"
     }
@@ -229,3 +244,5 @@ function Format-CamlValue {
 }
 
 Set-Alias -Name value -Value Format-CamlValue
+
+Export-ModuleMember -Alias * -Function *
