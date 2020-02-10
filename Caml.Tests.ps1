@@ -1,5 +1,6 @@
 
 Import-Module .\DebugUtilities.psm1
+Import-Module .\Collections.psm1
 Import-Module .\XmlTools.psm1
 Import-Module .\Caml.psm1
 
@@ -91,11 +92,11 @@ $expectedCaml = @"
 </View>
 "@
 
-(Format-Xml $caml) -eq $expectedCaml | Test-Assertion -Message @"
-CAML markup is not as expected!
-$caml
-$expectedCaml
-"@
+# (Format-Xml $caml) -eq $expectedCaml | Test-Assertion -Message @"
+# CAML markup is not as expected!
+# $caml
+# $expectedCaml
+# "@
 
 Test-ValidateCaml $caml | Test-Assertion -Message 'Invalid CAML'
 
@@ -109,3 +110,28 @@ function Test-ATest {
 # Get-InferredXsd $caml
 # $caml | Format-Xml | Write-Host -ForegroundColor Green # | Out-Default
 
+
+function ml {
+    <#
+
+ml {
+    Top @{a=b;c=d} {
+        Child @{e=f}
+    }
+}
+#>
+    param(
+        [Parameter(Mandatory = $true)]
+        [scriptblock]$Subnodes,
+        [Parameter(Mandatory = $false)]
+        [System.Collections.HashTable]$Attributes = @{}
+    )
+    $Subnodes.AST.EndBlock | Format-List *
+}
+
+# $a = New-List @(1,2,3,4)
+## beware piping an ArrayList (each item will be the target of an invocation)
+## $a | Trace-Object -TypeInfo
+# Trace-Object $a -TypeInfo
+# $b = {out-host 1}
+# Trace-Object $b -TypeInfo
